@@ -12,8 +12,8 @@ def mod_inverse(a, m):
     
     gcd, x, _ = extended_gcd(a, m)
     return x % m if gcd == 1 else None
-a = 4
-m = 5
+a = 11
+m = 7 
 
 print(f"GCD of {a} and {m} is: {gcd(a, m)}")
 
