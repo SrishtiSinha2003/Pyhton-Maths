@@ -1,18 +1,24 @@
 import numpy as np
+def rayleigh_power_method(A, x0, tol=1e-6, max_iter=1000):
+    x = x0 / np.linalg.norm(x0)  # Normalize the initial vector
+    lambda_old = 0  # Initial eigenvalue guess
+    for _ in range(max_iter):
+        Ax = np.dot(A, x)
+        lambda_new = np.dot(x.T, Ax) / np.dot(x.T, x)  # Rayleigh quotient
 
-def power_method(A, x, tol=1e-6, max_iters=100):
-    x = x / np.linalg.norm(x)  
-    for _ in range(max_iters):
-        x_new = np.dot(A, x)  
-        lambda_max = np.max(np.abs(x_new))  
-        x_new = x_new / np.linalg.norm(x_new)  
-        if np.allclose(x, x_new, atol=tol):  
+        x_new = Ax / np.linalg.norm(Ax)  # Normalize the new vector
+
+        if np.abs(lambda_new - lambda_old) < tol:
             break
-        x = x_new  
-    return x
-
-A = np.array([[4, 1, 0], [0, 2, 1], [0, 0, 1]])
-x0 = np.array([1, 1, 1])
-dominant_eigenvector = power_method(A, x0)
-print("Approximate Dominant Eigenvector: ")
-print("\n".join([f"{val:6f}" for val in dominant_eigenvector]))
+            # if the eigenvalue has converged
+        x = x_new
+        lambda_old = lambda_new
+    return lambda_new, x  # Return the eigenvalue and eigenvector
+if __name__ == "__main__":
+    # Define a square matrix
+    A = np.array([[2, 1],
+                  [3, 3]])
+    x0 = np.array([1, 1])
+    eigenvalue, eigenvector = rayleigh_power_method(A, x0)
+    print("Dominant Eigenvalue:", eigenvalue)
+    print("Corresponding Eigenvector:", eigenvector)
